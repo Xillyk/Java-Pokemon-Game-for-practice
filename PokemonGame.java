@@ -87,7 +87,7 @@ public class PokemonGame {
         System.out.println("============================================================");
         System.out.println("                       > How TO Play <");          
         System.out.println("You will be playing as pokemon trainer. You can go to fight");
-        System.out.println("with monster in dungeon , catch some pokemon , feed it with ");
+        System.out.println("with pokemon in dungeon , catch some pokemon , feed it with ");
         System.out.println("'Berry' and whenever your pokemon die , don't be so sorrow.");
         System.out.println("Just go to 'Pokemon Center to treat it. Have fun :) '");
         System.out.println("                          <><><><>");
@@ -231,21 +231,21 @@ public class PokemonGame {
     }
 
     private static void goAdventure() {
-        int monsterHP = randomInt(35, 60);
-        int monsterMaxHP = monsterHP;
-        int monsterAP;
-        double monsterExp = randomDouble(30, 50);
+        int unknownPokemonHP = randomInt(35, 60);
+        int unknownPokemonMaxHP = unknownPokemonHP;
+        int unknownPokemonAP;
+        double unknownPokemonExp = randomDouble(30, 50);
         boolean isTrainerEscape = false;
-        System.out.println("Monster in your area!!!");
+        System.out.println("Pokemon in your area!!!");
         while (!isTrainerEscape) {
             delay(500);
-            monsterAP = randomInt(20, 30);
-            if (monsterHP <= 0 && isTrainerEscape == false) {
+            unknownPokemonAP = randomInt(20, 30);
+            if (unknownPokemonHP <= 0 && isTrainerEscape == false) {
                 delay(500);
-                System.out.println("Hurey!! You beat monster down!!");
+                System.out.println("Hurey!! You beat pokemon down!!");
                 delay(500);
-                myPokemons.get(indexObj).earnExp(monsterExp);
-                System.out.println(myPokemons.get(indexObj).getName() + " earned " + String.format("%.2f", monsterExp) + " Exp");
+                myPokemons.get(indexObj).earnExp(unknownPokemonExp);
+                System.out.println(myPokemons.get(indexObj).getName() + " earned " + String.format("%.2f", unknownPokemonExp) + " Exp");
                 System.out.println("[ " + myPokemons.get(indexObj).getHP() + "/" + myPokemons.get(indexObj).getMaxHP() + " HP ]");
                 System.out.println("[ " + String.format("%.2f", myPokemons.get(indexObj).getExp()) + "/" + String.format("%.2f", myPokemons.get(indexObj).getMaxExpPerLevel()) + " Exp ]");
                 // ################################################################################################################
@@ -255,18 +255,18 @@ public class PokemonGame {
                 numSelect = 0;
                 //## print
                 System.out.println("============================================================");
-                System.out.println("Monster HP : " + monsterHP + "/" + monsterMaxHP);
+                System.out.println("Pokemon HP : " + unknownPokemonHP + "/" + unknownPokemonMaxHP);
                 System.out.println(myPokemons.get(indexObj).getName() + " HP : " + myPokemons.get(indexObj).getHP() + "/" + myPokemons.get(indexObj).getMaxHP());
-                System.out.println("Action :: [1] Attack    [2] Regen HP    [3] Change Pokemon [4] Escape");
-                System.out.println(" [5] catch");              
+                System.out.println("Action :: [1] Attack    [2] Regen HP    [3] Change Pokemon");
+                System.out.println("          [4] catch     [5] Escape");              
                 System.out.println("------------------------------------------------------------");
                 //## print
                 while (true) {
                     System.out.print("Enter : ");
                     numSelect = in.nextInt();
                     if (numSelect == 1) {
-                        monsterHP -= myPokemons.get(indexObj).getAP();
-                        myPokemons.get(indexObj).getDamage(monsterAP);
+                        unknownPokemonHP -= myPokemons.get(indexObj).getAP();
+                        myPokemons.get(indexObj).getDamage(unknownPokemonAP);
                         myPokemons.get(indexObj).lossHugryPoint(5);
                         myPokemons.get(indexObj).lossSleepPoint(5);
                         if (myPokemons.get(indexObj).isDie()) {
@@ -310,6 +310,9 @@ public class PokemonGame {
                         // ################################################################################################################
                         System.out.println("Change Pokemon Not awailable Now!");
                     } else if (numSelect == 4) {
+                        catchPokemon();
+                        break;
+                    } else if (numSelect == 5) {
                         isTrainerEscape = true;
                         System.out.println("Runnnnn!!!!!");
                         break;
@@ -319,6 +322,10 @@ public class PokemonGame {
                 }
             } 
         }
+    }
+
+    private static void catchPokemon(){
+
     }
 
     // #-----------------------
