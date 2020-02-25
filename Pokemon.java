@@ -217,7 +217,7 @@ public class Pokemon {
         return randNum;
     }
 
-    private static double randomDouble(int min, int max) {
+    private double randomDouble(int min, int max) {
         double randNum = 0;
         randNum = (double) Math.random() * ((max - min) + 1) + min;
         return randNum;
