@@ -1,15 +1,18 @@
 import java.util.Scanner;
+import java.util.ArrayList; 
 
 public class PokemonGame {
     private static boolean running = true;
     private static int numSelect;
-    // private static int numSelect2;
-    // private static int numSelect3;
     private static String str;
     private static Scanner in = new Scanner(System.in);
-    private static Pokemon myPokemon = new Pokemon();
+    private static int indexObj;
+    private static boolean firstRoundRunning = true;
+    private static String tmpName;
+    private static ArrayList<Pokemon> myPokemons;
 
     public static void main(String args[]) {
+        myPokemons = new ArrayList<Pokemon>();
         showWelcomeUI();
         do {
             gameMenu(); // run game
@@ -32,22 +35,44 @@ public class PokemonGame {
 
     private static void gameMenu() {
         delay(500);
-        System.out.println("============================================================");
-        System.out.println("                        Choose Action");
-        System.out.println("Action  :: [1]  Create New Pokemon");
-        System.out.println("        :: [2]  play with your Pokemon");
-        System.out.println("        :: [0]  Exit Pokemon World");
-        System.out.println("------------------------------------------------------------");
+        if (firstRoundRunning == true) {
+           showMenuUIFirstTime();
+           selectMenu();
+        } else {
+            showMenuUIBackToMainMenu();
+            selectMenu();
+        }
+    }
 
+    private static void showMenuUIFirstTime() {
+        System.out.println("============================================================");
+        System.out.println("                         Main Menu");
+        System.out.println("Action  :: [1]  Start Pokemon World");
+        System.out.println("        :: [0]  Exit Game");
+        System.out.println("------------------------------------------------------------");
+    }
+    private static void showMenuUIBackToMainMenu() {
+        System.out.println("============================================================");
+        System.out.println("                         Main Menu");
+        System.out.println("Action  :: [1]  Return to Pokemon World");
+        System.out.println("        :: [0]  Exit Game");
+        System.out.println("------------------------------------------------------------");
+    }
+
+    private static void selectMenu() {
         while (true) {
             numSelect = -1;
             System.out.print("Enter : ");
             numSelect = in.nextInt();
             if (numSelect == 1) {
-                createNewPokemon();
-                break;
-            } else if (numSelect == 2) {
-                playWithPokemon();
+                delay(500);
+                if (firstRoundRunning == true) {
+                    noticeToPlayerUI();
+                    delay(2500);
+                    createNewPokemon();
+                    firstRoundRunning = false;
+                }
+                playPokemonWorld();
                 break;
             } else if (numSelect == 0) {
                 stopRunning();
@@ -58,9 +83,50 @@ public class PokemonGame {
         }
     }
 
-    private static void createNewPokemon() {
+    private static void noticeToPlayerUI() {
         System.out.println("============================================================");
-        System.out.println("                    Create New Pokemon");
+        System.out.println("                       > How TO Play <");          
+        System.out.println("You will be playing as pokemon trainer. You can go to fight");
+        System.out.println("with monster in dungeon , catch some pokemon , feed it with ");
+        System.out.println("'Berry' and whenever your pokemon die , don't be so sorrow.");
+        System.out.println("Just go to 'Pokemon Center to treat it. Have fun :) '");
+        System.out.println("                          <><><><>");
+        System.out.println("============================================================\n");
+    }
+
+    private static void createNewPokemon() {
+        while (true) {
+            str = "";
+            System.out.print("Your pokemon's name : ");
+            str = in.next();
+            if (str != null && !str.equals("")) {
+                createNewPokemonUI();
+                while (true) {
+                    numSelect = 0;
+                    System.out.print("Enter : ");
+                    numSelect = in.nextInt();
+                    if (numSelect >= 1 && numSelect <= 6) {
+                        indexObj = 0;
+                        myPokemons.add(new Pokemon(str,numSelect));
+                        break;
+                    } else {
+                        System.out.println("Invalid Input!, Try Again");
+                    }
+                }
+                delay(500);
+                System.out.println("Finish Created Pokemon");
+                delay(500);
+                showPokemonStatusUI();
+                delay(1500);
+                break;
+            } else
+                System.out.println("Invalid Input!, Try Again");
+        }
+    }
+
+    private static void createNewPokemonUI() {
+        System.out.println("============================================================");
+        System.out.println("                     Create your Pokemon");          
         System.out.println("Choose Pokemon Type     :: [1]  Normal");
         System.out.println("                        :: [2]  Fire");
         System.out.println("                        :: [3]  Water");
@@ -68,76 +134,43 @@ public class PokemonGame {
         System.out.println("                        :: [5]  Electric");
         System.out.println("                        :: [6]  Poison");
         System.out.println("------------------------------------------------------------");
-        while (true) {
-            numSelect = 0;
-            System.out.print("Enter : ");
-            numSelect = in.nextInt();
-            if (numSelect >= 1 && numSelect <= 6) {
-                myPokemon.setType(numSelect);
-                while (true) {
-                    str = "";
-                    System.out.print("Give it a name          :: ");
-                    str = in.next();
-                    if (str != "") {
-                        myPokemon.setName(str);
-                        System.out.println("Finish Created Pokemon");
-                        showPokemonStatus();
-                        delay(1000);
-                        break;
-                    } else
-                        System.out.println("Invalid Input!, Try Again");
-                }
-                break;
-            } else {
-                System.out.println("Invalid Input!, Try Again");
-            }
-        }
     }
-
-    private static void playWithPokemon() {
+    
+    private static void playPokemonWorld() {
         // #Later with array
         // System.out.println("Choose Your Pokemon");
         boolean outToMain = false;
         while (!outToMain) {
             delay(500);
-            System.out.println("============================================================");
-            System.out.println("Choose Action       :: [1] Go Adventure");
-            System.out.println("                    :: [2] Feed");
-            System.out.println("                    :: [3] Sleep");
-            System.out.println("                    :: [4] Cure at pokemon center");
-            System.out.println("                    :: [5] See Status");
-            System.out.println("                    :: [0] Back to Main Menu");
-            System.out.println("------------------------------------------------------------");
+            showPlayPokemonWorldUI();
             while (true) {
                 System.out.print("Enter : ");
                 numSelect = -1;
                 numSelect = in.nextInt();
-                // roam , attack (or leave)
-                // eat
-                // sleep
+                // roam , attack (or leave) // eat // sleep
                 if (numSelect == 1) {
-                    if(myPokemon.getHP() <= 0 ) {
+                    /*if(myPokemon.getHP() <= 0 ) {
                         System.out.println("Your pokemon has died , Go to pokemon Center first!!");
                         break;
-                    }
+                    }*/
                     delay(1000);
                     goAdventure();
                     break;
                 } else if (numSelect == 2) {
-                    myPokemon.eatBerry(20, 10);
-                    System.out.println(myPokemon.getName() + " HP : " + myPokemon.getHP() + "/" + myPokemon.getMaxHP());
+                    myPokemons.get(indexObj).eatBerry(20, 10);
+                    System.out.println(myPokemons.get(indexObj).getName() + " HP : " + myPokemons.get(indexObj).getHP() + "/" + myPokemons.get(indexObj).getMaxHP());
                     break;
                 } else if (numSelect == 3) {
-                    System.out.println(myPokemon.getName() + " is sleeping . . .");
+                    System.out.println(myPokemons.get(indexObj).getName() + " is sleeping . . .");
                     delay(2000);
-                    myPokemon.sleep();
-                    System.out.println(myPokemon.getName() + " Sleep Point : " + myPokemon.getSleepPoint() + "/" + myPokemon.getMaxSleepingPoint());
+                    myPokemons.get(indexObj).sleep();
+                    System.out.println(myPokemons.get(indexObj).getName() + " Sleep Point : " + myPokemons.get(indexObj).getSleepPoint() + "/" + myPokemons.get(indexObj).getMaxSleepingPoint());
                     break;
                 } else if (numSelect == 4) {
                     curePokemonAtPokemonCenter();
                     break;
                 } else if (numSelect == 5) {
-                    showPokemonStatus();
+                    showPokemonStatusUI();
                     break;
                 } else if (numSelect == 0) {
                     outToMain = true;
@@ -149,22 +182,52 @@ public class PokemonGame {
         }
     }
 
-    private static void showPokemonStatus() {
-        System.out.println("| " + myPokemon.getName() + "          Type : " + myPokemon.getType() + "    Level : "
-                + myPokemon.getLevel() + "    Death : " + myPokemon.getDeathCount() + " time");
-        System.out.println("| HP           : " + myPokemon.getHP() + "/" + myPokemon.getMaxHP());
-        System.out.println("| Exp          : " + String.format("%.2f", myPokemon.getExp()) + "/"
-                + String.format("%.2f", myPokemon.getMaxExpPerLevel()));
-        System.out.println("| AP           : " + myPokemon.getAP());
-        System.out.println("| Hungry Point : " + myPokemon.getHungryPoint() + "/" + myPokemon.getMaxHungryPoint());
-        System.out.println("| Sleep Point  : " + myPokemon.getSleepPoint() + "/" + myPokemon.getMaxSleepingPoint());
+    private static void showPlayPokemonWorldUI() {
+        System.out.println("============================================================");
+        System.out.println("Choose Action       :: [1] Go Adventure");
+        System.out.println("                    :: [2] Feed");
+        System.out.println("                    :: [3] Sleep");
+        System.out.println("                    :: [4] Cure at pokemon center");
+        System.out.println("                    :: [5] See Status");
+        System.out.println("                    :: [0] Back to Main Menu");
+        System.out.println("------------------------------------------------------------");
+    }
+
+    private static void showPokemonStatusUI() {
+        System.out.println("| " + myPokemons.get(indexObj).getName() + "          Type : " + myPokemons.get(indexObj).getType() + "    Level : "
+                + myPokemons.get(indexObj).getLevel() + "    Death : " + myPokemons.get(indexObj).getDeathCount() + " time");
+        System.out.println("| HP           : " + myPokemons.get(indexObj).getHP() + "/" + myPokemons.get(indexObj).getMaxHP());
+        System.out.println("| Exp          : " + String.format("%.2f", myPokemons.get(indexObj).getExp()) + "/"
+                + String.format("%.2f", myPokemons.get(indexObj).getMaxExpPerLevel()));
+        System.out.println("| AP           : " + myPokemons.get(indexObj).getAP());
+        System.out.println("| Hungry Point : " + myPokemons.get(indexObj).getHungryPoint() + "/" + myPokemons.get(indexObj).getMaxHungryPoint());
+        System.out.println("| Sleep Point  : " + myPokemons.get(indexObj).getSleepPoint() + "/" + myPokemons.get(indexObj).getMaxSleepingPoint());
     }
 
     private static void curePokemonAtPokemonCenter() {
-        // System.out.println("============================================================");
-        // System.out.println(" Select Pokemon to Cure");
-        System.out.println(myPokemon.getName() + " back to Alive!");
-        myPokemon.curePokemon();
+        System.out.println("============================================================");
+        System.out.println("                   Welcome to Pokemon Center");
+        System.out.println("============================================================");
+        listPokemon();
+        System.out.println("Select Pokemon to treat / Treat all of your pokemon [Press 0]");
+        while (true) {
+            numSelect = -1;
+            System.out.print("Enter : ");
+            numSelect = in.nextInt();
+            if (numSelect >= 1 && numSelect <= (myPokemons.size() + 1)) {
+                
+                System.out.println("Do you want to treat another pokemon [y/n] ?");
+
+            } else if (numSelect == 0) {
+               
+                break;
+            } else {
+                System.out.println("Invalid Input!, Try Again");
+            }
+        }
+
+       // System.out.println(myPokemons.get(indexObj).getName() + " back to Alive!");
+        //myPokemons.get(indexObj).curePokemon();
     }
 
     private static void goAdventure() {
@@ -181,41 +244,45 @@ public class PokemonGame {
                 delay(500);
                 System.out.println("Hurey!! You beat monster down!!");
                 delay(500);
-                myPokemon.earnExp(monsterExp);
-                System.out.println(myPokemon.getName() + " earned " + String.format("%.2f", monsterExp) + " Exp");
-                System.out.println("[ " + myPokemon.getHP() + "/" + myPokemon.getMaxHP() + " HP ]");
-                System.out.println("[ " + String.format("%.2f", myPokemon.getExp()) + "/" + String.format("%.2f", myPokemon.getMaxExpPerLevel()) + " Exp ]");
+                myPokemons.get(indexObj).earnExp(monsterExp);
+                System.out.println(myPokemons.get(indexObj).getName() + " earned " + String.format("%.2f", monsterExp) + " Exp");
+                System.out.println("[ " + myPokemons.get(indexObj).getHP() + "/" + myPokemons.get(indexObj).getMaxHP() + " HP ]");
+                System.out.println("[ " + String.format("%.2f", myPokemons.get(indexObj).getExp()) + "/" + String.format("%.2f", myPokemons.get(indexObj).getMaxExpPerLevel()) + " Exp ]");
                 // ################################################################################################################
                 // get item
                 break;
             } else if (isTrainerEscape == false) {
                 numSelect = 0;
+                //## print
                 System.out.println("============================================================");
                 System.out.println("Monster HP : " + monsterHP + "/" + monsterMaxHP);
-                System.out.println(myPokemon.getName() + " HP : " + myPokemon.getHP() + "/" + myPokemon.getMaxHP());
-                System.out.println("Action :: [1] Attack    [2] Regen HP    [-X-] Change Pokemon [4] Escape");
+                System.out.println(myPokemons.get(indexObj).getName() + " HP : " + myPokemons.get(indexObj).getHP() + "/" + myPokemons.get(indexObj).getMaxHP());
+                System.out.println("Action :: [1] Attack    [2] Regen HP    [3] Change Pokemon [4] Escape");
+                System.out.println(" [5] catch");              
                 System.out.println("------------------------------------------------------------");
-                // System.out.println(" [5] catch");
+                //## print
                 while (true) {
                     System.out.print("Enter : ");
                     numSelect = in.nextInt();
                     if (numSelect == 1) {
-                        monsterHP -= myPokemon.getAP();
-                        myPokemon.getDamage(monsterAP);
-                        myPokemon.lossHugryPoint(5);
-                        myPokemon.lossSleepPoint(5);
-                        if (myPokemon.isDie()) {
+                        monsterHP -= myPokemons.get(indexObj).getAP();
+                        myPokemons.get(indexObj).getDamage(monsterAP);
+                        myPokemons.get(indexObj).lossHugryPoint(5);
+                        myPokemons.get(indexObj).lossSleepPoint(5);
+                        if (myPokemons.get(indexObj).isDie()) {
                             delay(400);
                             double tmpLossExp = 0.0;
-                            System.out.println("------------------------------------------------------------");
-                            System.out.println(myPokemon.getName() + " is dead!   Death : " + myPokemon.getDeathCount() + " times");
                             tmpLossExp = randomDouble(5, 15);
-                            myPokemon.lossExp(tmpLossExp);
-                            System.out.println(myPokemon.getName() + " loss " + String.format("%.2f", tmpLossExp) + " Exp.");
+                            myPokemons.get(indexObj).lossExp(tmpLossExp);
+                            //## print
+                            System.out.println("------------------------------------------------------------");
+                            System.out.println(myPokemons.get(indexObj).getName() + " is dead!   Death : " + myPokemons.get(indexObj).getDeathCount() + " times");
+                            System.out.println(myPokemons.get(indexObj).getName() + " loss " + String.format("%.2f", tmpLossExp) + " Exp.");
                             delay(400);
                             System.out.println("You have to 'Change pokemon' or 'Escape' !!");
-                            System.out.println("Select ::   [1] Change Pokemon [!!Dont press not available now]");
+                            System.out.println("Select ::   [1] Change Pokemon ");
                             System.out.println("       ::   [2] Escape");
+                            //## print
                             while (true) {
                                 numSelect = 0;
                                 System.out.print("Enter :");
@@ -235,7 +302,7 @@ public class PokemonGame {
                         }
                         break;
                     } else if (numSelect == 2) {
-                        myPokemon.regenHealth(20);
+                        myPokemons.get(indexObj).regenHealth(20);
                         break;
                     } else if (numSelect == 3) {
                         // chage pokemon
@@ -255,7 +322,21 @@ public class PokemonGame {
     }
 
     // #-----------------------
-
+    private static void listPokemon() {
+        int index = 1;
+        System.out.println("Your Pokemon : ");
+        for (Pokemon mypokemon : myPokemons) {
+            System.out.println("            [" + index + "] " + mypokemon.getName());
+        }
+    }
+/*
+    private static int findIndexOfArrayList() {
+        int index = 0;
+        for (Pokemon mypokemon : myPokemons) {
+            if()
+        }
+    }
+*/
     private static int randomInt(int min, int max) {
         int randNum = 0;
         randNum = (int) (Math.random() * ((max - min) + 1)) + min;

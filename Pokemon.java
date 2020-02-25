@@ -1,204 +1,210 @@
 public class Pokemon {
-    private String pokemonName;
-    private String pokemonType;
-    private int pokemonHP;
-    private int pokemonMaxHP;
-    private int pokemonAP; // attack point
-    private int pokemonPP; // power point
-    private int pokemonSleepPoint;
-    private int pokemonMaxSleepPoint;
-    private int pokemonHungryPoint;
-    private int pokemonMaxHungryPoint;
-    private double pokemonExp;
-    private double pokemonMaxExpPerLevel;
-    private int pokemonLevel;
+    private String name;
+    private String type;
+    private int healthPoint;
+    private int maxHealthPoint;
+    private int attackPoint; // attack point
+    private int powerPoint; // power point
+    private int sleepPoint;
+    private int maxSleepPoint;
+    private int hungryPoint;
+    private int maxHungryPoint;
+    private double exp;
+    private double maxExpPerLevel;
+    private int level;
     private int deathCount;
     private int tmpHP;
     private double tmpMaxExp;
     private int tmpAP;
 
-    public Pokemon() {
-        pokemonName = "";
-        pokemonType = "";
-        pokemonHP = randomInt(50, 70);
-        pokemonMaxHP = pokemonHP;
-        pokemonAP = randomInt(20, 40);
-        pokemonSleepPoint = 100; // %
-        pokemonMaxSleepPoint = pokemonSleepPoint;
-        pokemonHungryPoint = 100; // %
-        pokemonMaxHungryPoint = pokemonHungryPoint;
-        pokemonExp = 0.0;
-        pokemonMaxExpPerLevel = 50.0;
-        pokemonLevel = 1;
+    public Pokemon(String _name, int _type) {
+        setType(_type);
+        //type = "";
+        name = _name;
+        healthPoint = randomInt(50, 70);
+        maxHealthPoint = healthPoint;
+        attackPoint = randomInt(20, 40);
+        sleepPoint = 100; // %
+        maxSleepPoint = sleepPoint;
+        hungryPoint = 100; // %
+        maxHungryPoint = hungryPoint;
+        exp = 0.0;
+        maxExpPerLevel = 50.0;
+        level = 1;
         deathCount = 0;
-        tmpHP = pokemonHP;
-        tmpMaxExp = pokemonMaxExpPerLevel;
-        tmpAP = pokemonAP;
+        tmpHP = healthPoint;
+        tmpMaxExp = maxExpPerLevel;
+        tmpAP = attackPoint;
     }
-    //# -------------user initial-------------------
+   // # -------------user initial-------------------
     public void setName(String _pokemonName) {
-        pokemonName = _pokemonName;
+        name = _pokemonName;
     }
 
     public void setType(int numType) {
         if (numType == 1) {
-            pokemonType = "Normal";
+            type = "Normal";
         } else if (numType == 2) {
-            pokemonType = "Fire";
+            type = "Fire";
         } else if (numType == 3) {
-            pokemonType = "Water";
+            type = "Water";
         } else if (numType == 4) {
-            pokemonType = "Grass";
+            type = "Grass";
         } else if (numType == 5) {
-            pokemonType = "Electric";
+            type = "Electric";
         } else if (numType == 6) {
-            pokemonType = "Poison";
+            type = "Poison";
         }
     }
+
+    //#---------------initial for monster------------
+
+    //public void setCatchedPokemonN
+
     //# --------------Exp and Level------------------
     public void earnExp(double monsterExp) {
-        if ((pokemonExp + monsterExp) >= pokemonMaxExpPerLevel) {
-            pokemonExp = (pokemonExp + monsterExp) - pokemonMaxExpPerLevel;
+        if ((exp + monsterExp) >= maxExpPerLevel) {
+            exp = (exp + monsterExp) - maxExpPerLevel;
             levelUp();
         } else {
-            pokemonExp += monsterExp;
+            exp += monsterExp;
         }
     }
 
     public void levelUp() {
-        pokemonLevel += 1;
-        pokemonMaxExpPerLevel = tmpMaxExp * pokemonLevel;
-        pokemonMaxHP = tmpHP * pokemonLevel;
-        pokemonAP = tmpAP * pokemonLevel;
+        level += 1;
+        maxExpPerLevel = tmpMaxExp * level;
+        maxHealthPoint = tmpHP * level;
+        attackPoint = tmpAP * level;
     }
 
     public void lossExp(double value){
-        if ((pokemonExp - value) > 0.0 ) {
-            pokemonExp -= value;
+        if ((exp - value) > 0.0 ) {
+            exp -= value;
         } else {
-            pokemonExp = 0.0;
+            exp = 0.0;
         }
     }
     //# --------------Get Damage------------------
     public void getDamage(int monsterAP) {
-        if ((pokemonHP - monsterAP) > 0) {
-            pokemonHP -= monsterAP;
+        if ((healthPoint - monsterAP) > 0) {
+            healthPoint -= monsterAP;
         } else {
-            pokemonHP = 0;
+            healthPoint = 0;
             deathCount++;
         }
     }
 
     public boolean isDie() {
-        if (pokemonHP <= 0)
+        if (healthPoint <= 0)
             return true;
         else
             return false;
     }
     //# --------------Healing------------------
-    public void curePokemon() {
-        pokemonHP = pokemonMaxHP;
+    public void getCured() {
+        healthPoint = maxHealthPoint;
     }
 
     public void regenHealth(int value) {
         // add more
-        if ((pokemonHP + value) >= pokemonMaxHP && (value != -1)) {
-            pokemonHP = pokemonMaxHP;
+        if ((healthPoint + value) >= maxHealthPoint && (value != -1)) {
+            healthPoint = maxHealthPoint;
         } else if (value == -1) {       //special
-            pokemonHP = pokemonMaxHP;
+            healthPoint = maxHealthPoint;
         } else {
-            pokemonHP += value;
+            healthPoint += value;
         }
     }
     // #------------------decrese------------------
     public void lossSleepPoint(int value) {
-        if ((pokemonSleepPoint - value) <= 0) {
-            pokemonSleepPoint = 0;
+        if ((sleepPoint - value) <= 0) {
+            sleepPoint = 0;
         }
         else {
-            pokemonSleepPoint -= value;
+            sleepPoint -= value;
         }
     }
 
     public void lossHugryPoint(int value) {
-        if ((pokemonHungryPoint - value) <= 0) {
-            pokemonHungryPoint = 0;
+        if ((hungryPoint - value) <= 0) {
+            hungryPoint = 0;
         }
         else {
-            pokemonHungryPoint -= value;
+            hungryPoint -= value;
         }
     }
     //# ----------------increase------------------
     public void eatBerry(int valueHp , int valueHgP) {
-        if ((pokemonHP + valueHp) >= pokemonMaxHP) {
-            pokemonHP = pokemonMaxHP;
+        if ((healthPoint + valueHp) >= maxHealthPoint) {
+            healthPoint = maxHealthPoint;
         } else {
-            pokemonHP += valueHp;
+            healthPoint += valueHp;
         }
-        if ((pokemonHungryPoint + valueHgP) >= pokemonMaxHungryPoint) {
-            pokemonHungryPoint = pokemonMaxHungryPoint;
+        if ((hungryPoint + valueHgP) >= maxHungryPoint) {
+            hungryPoint = maxHungryPoint;
         } else {
-            pokemonHungryPoint += valueHgP;
+            hungryPoint += valueHgP;
         }
     }
 
     public void sleep() {
-        pokemonSleepPoint = pokemonMaxSleepPoint;
+        sleepPoint = maxSleepPoint;
         lossHugryPoint(20);
         regenHealth(-1);        //set Hp to max
     }
 
     // #-------------get method----------------
     public String getName() {
-        return pokemonName;
+        return name;
     }
 
     public String getType() {
-        return pokemonType;
+        return type;
     }
 
     public int getHP() {
-        return pokemonHP;
+        return healthPoint;
     }
 
     public int getMaxHP() {
-        return pokemonMaxHP;
+        return maxHealthPoint;
     }
 
     public int getAP() {
-        return pokemonAP;
+        return attackPoint;
     }
 
     public int getPP() {
-        return pokemonPP;
+        return powerPoint;
     }
 
     public int getSleepPoint() {
-        return pokemonSleepPoint;
+        return sleepPoint;
     }
 
     public int getMaxSleepingPoint() {
-        return pokemonMaxSleepPoint;
+        return maxSleepPoint;
     }
 
     public int getHungryPoint() {
-        return pokemonHungryPoint;
+        return hungryPoint;
     }
 
     public int getMaxHungryPoint() {
-        return pokemonMaxHungryPoint;
+        return maxHungryPoint;
     }
 
     public int getLevel() {
-        return pokemonLevel;
+        return level;
     }
 
     public double getExp() {
-        return pokemonExp;
+        return exp;
     }
 
     public double getMaxExpPerLevel() {
-        return pokemonMaxExpPerLevel;
+        return maxExpPerLevel;
     }
 
     public int getDeathCount() {
