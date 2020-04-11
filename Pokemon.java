@@ -1,5 +1,6 @@
-public class Pokemon {
+public abstract class Pokemon {
     private String name;
+    private String nickName;
     private String type;
     private int healthPoint;
     private int maxHealthPoint;
@@ -17,10 +18,11 @@ public class Pokemon {
     private double tmpMaxExp;
     private int tmpAP;
 
-    public Pokemon(String _name, int _type) {
-        setType(_type);
+    public Pokemon(String name, String nickName) {
+        //setType(type);
         //type = "";
-        name = _name;
+        this.name = name;
+        this.nickName = nickName;
         healthPoint = randomInt(50, 70);
         maxHealthPoint = healthPoint;
         attackPoint = randomInt(20, 40);
@@ -36,12 +38,13 @@ public class Pokemon {
         tmpMaxExp = maxExpPerLevel;
         tmpAP = attackPoint;
     }
+    
    // # -------------user initial-------------------
-    public void setName(String _pokemonName) {
-        name = _pokemonName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setType(int numType) {
+    public void setType(int numType) {          //will receive type from constructor
         if (numType == 1) {
             type = "Normal";
         } else if (numType == 2) {
@@ -155,6 +158,10 @@ public class Pokemon {
     }
 
     // #-------------get method----------------
+    public String toString() {
+        return nickName;
+    }
+
     public String getName() {
         return name;
     }
