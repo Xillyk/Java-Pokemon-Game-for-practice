@@ -6,22 +6,24 @@ public class PokemonGame {
     private static int numSelect;
     private static String str;
     private static Scanner in;
+    private static Trainer t;
+
     public static void main(String args[]) {
         running = true;
         firstRoundRunning = true;
         in = new Scanner(System.in);
         PokemonGame g = new PokemonGame();
-        Trainer t = new Trainer();
+        t = new Trainer();
         g.showWelcomeInterface();
 
         do {
-            delay(500);
+            GameUtility.delay(500);
             if (firstRoundRunning == true) {
                 g.showMenuInterfaceFirstTime();
-                g.selectMenu(t);
+                g.selectMenu();
             } else {
                 g.showMenuInterfaceBackToMainMenu();
-                g.selectMenu(t);
+                g.selectMenu();
             }
 
         } while (running);
@@ -68,17 +70,18 @@ public class PokemonGame {
         System.out.println("============================================================\n");
     }
 
-    private void selectMenu(Trainer t) {
+    private void selectMenu() {
         while (true) {
             numSelect = -1;
             System.out.print("Enter : ");
             numSelect = in.nextInt();
             if (numSelect == 1) {
-                delay(500);
+                GameUtility.delay(500);
                 if (firstRoundRunning == true) {
                     noticeToPlayerInterface();
                     //delay(2500);
-                    createTrainer(t);
+                    createTrainer();
+                    //System.out.println("Finish creating trainer.. " + t);
                     firstRoundRunning = false;
                     t.receiveFirstPokemon();
                     t.act();
@@ -96,7 +99,7 @@ public class PokemonGame {
         }
     }
 
-    public void createTrainer(Trainer t) {
+    public void createTrainer() {
         while (true) {
             str = "";
             System.out.print("Enter your name : ");
@@ -114,13 +117,5 @@ public class PokemonGame {
 
     private void stopRunning() {
         running = false;
-    }
-
-    private static void delay(int _delayInMicrosec) {
-        try {
-            Thread.sleep(_delayInMicrosec);
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-        }
     }
 }

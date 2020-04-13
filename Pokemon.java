@@ -23,9 +23,9 @@ public abstract class Pokemon {
         //type = "";
         this.name = name;
         this.nickName = nickName;
-        healthPoint = randomInt(50, 70);
+        healthPoint = GameUtility.randomInt(50, 70);
         maxHealthPoint = healthPoint;
-        attackPoint = randomInt(20, 40);
+        attackPoint = GameUtility.randomInt(20, 40);
         sleepPoint = 100; // %
         maxSleepPoint = sleepPoint;
         hungryPoint = 100; // %
@@ -40,8 +40,8 @@ public abstract class Pokemon {
     }
     
    // # -------------user initial-------------------
-    public void setName(String name) {
-        this.name = name;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public void setType(int numType) {          //will receive type from constructor
@@ -59,10 +59,25 @@ public abstract class Pokemon {
             type = "Poison";
         }
     }
+    //#---------------act---------------
+    public void actack() {
+        //damage wild pokemon
+        //getDamage(*******);
+        lossHugryPoint(5);   
+        lossSleepPoint(5);
+    }
 
-    //#---------------initial for monster------------
+    //#---------------status------------
 
-    //public void setCatchedPokemonN
+    public void getStatus() { 
+        System.out.println("| Nickname     : " + nickName + "      Name : " + name);
+        System.out.println("| Type         : " + getType() + "    Level : " + getLevel() + "    Death : " + getDeathCount() + " time");
+        System.out.println("| HP           : " + getHP() + "/" + getMaxHP());
+        System.out.println("| Exp          : " + String.format("%.2f", getExp()) + "/"+ String.format("%.2f", getMaxExpPerLevel()));
+        System.out.println("| AP           : " + getAP());
+        System.out.println("| Hungry Point : " + getHungryPoint() + "/" + getMaxHungryPoint());
+        System.out.println("| Sleep Point  : " + getSleepPoint() + "/" + getMaxSleepingPoint());
+    }
 
     //# --------------Exp and Level------------------
     public void earnExp(double monsterExp) {
@@ -79,6 +94,7 @@ public abstract class Pokemon {
         maxExpPerLevel = tmpMaxExp * level;
         maxHealthPoint = tmpHP * level;
         attackPoint = tmpAP * level;
+        System.out.println(nickName + " level up!!");
     }
 
     public void lossExp(double value){
@@ -149,12 +165,17 @@ public abstract class Pokemon {
         } else {
             hungryPoint += valueHgP;
         }
+        System.out.println(" HP : " + getHP() + "/" + getMaxHP());
+
     }
 
     public void sleep() {
+        System.out.println(nickName + " is sleeping . . .");
+        GameUtility.delay(2000);
         sleepPoint = maxSleepPoint;
         lossHugryPoint(20);
         regenHealth(-1);        //set Hp to max
+        System.out.println(nickName + " Sleep Point : " + getSleepPoint() + "/" + getMaxSleepingPoint());
     }
 
     // #-------------get method----------------
@@ -216,17 +237,5 @@ public abstract class Pokemon {
 
     public int getDeathCount() {
         return deathCount;
-    }
-    // #-------------utility----------------
-    private int randomInt(int min, int max) {
-        int randNum = 0;
-        randNum = (int) (Math.random() * ((max - min) + 1)) + min;
-        return randNum;
-    }
-
-    private double randomDouble(int min, int max) {
-        double randNum = 0;
-        randNum = (double) Math.random() * ((max - min) + 1) + min;
-        return randNum;
     }
 }
