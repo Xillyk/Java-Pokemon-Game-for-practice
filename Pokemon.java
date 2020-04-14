@@ -245,4 +245,11 @@ public abstract class Pokemon {
     public int getDeathCount() {
         return deathCount;
     }
+
+    public String getLifeStatus() {
+        if(isDie())
+            return "Died";
+        else 
+            return "Alive";
+    }
 }

@@ -10,6 +10,7 @@ public class Trainer {
     private String name;
     private ArrayList<Pokemon> pokemonBag;
     private ArrayList<Item> itemBag;
+    private int numOfPokemonInBag;
 
     public Trainer() {
         pIndex = 0;
@@ -19,6 +20,7 @@ public class Trainer {
         name = "";
         pokemonBag = new ArrayList<Pokemon>();
         itemBag = new ArrayList<Item>();
+        numOfPokemonInBag = 0;
     }
 
     public void setName(String name) {
@@ -49,14 +51,17 @@ public class Trainer {
                         if (numSelect == 1) {
                             randPokemons.get(0).setNickName(str);
                             pokemonBag.add(randPokemons.get(0));
+                            numOfPokemonInBag++;
                         }
                         else if (numSelect == 2) {
                             randPokemons.get(1).setNickName(str);
                             pokemonBag.add(randPokemons.get(1));
+                            numOfPokemonInBag++;
                         }   
                         else if (numSelect == 3) {
                             randPokemons.get(2).setNickName(str);
-                            pokemonBag.add(randPokemons.get(2)); 
+                            pokemonBag.add(randPokemons.get(2));
+                            numOfPokemonInBag++;
                         }
                         break;  //break if str is valid                                          
                     }
@@ -131,6 +136,7 @@ public class Trainer {
     }
     private void goAdventure() {
         boolean isTrainerEscape = false;
+        boolean firstRoundAttack = true;
         Pokemon wildPokemon;
         if(levelUpCount < 3) {
             wildPokemon = PokemonRandomizer.getOnePokemon(levelUpCount, 1);
@@ -163,10 +169,19 @@ public class Trainer {
                 System.out.println(wildPokemon + "      Name :  " + wildPokemon.getName() + "     type : " + wildPokemon.getType());
                 System.out.println("HP : " + wildPokemon.getHP() + "/" + wildPokemon.getMaxHP());
                 System.out.println(pokemonBag.get(pIndex) + " HP : " + pokemonBag.get(pIndex).getHP() + "/" + pokemonBag.get(pIndex).getMaxHP());
+                System.out.println("============================================================");
+                // ## print
+                //chang pokemon in first round
+                if (firstRoundAttack == true) {
+                    changePokemon();
+                    firstRoundAttack = false;
+                }
+
+                //print action
                 System.out.println("Action :: [1] Attack    [2] Regen HP    [3] Change Pokemon");
                 System.out.println("          [4] catch     [5] Escape");
                 System.out.println("------------------------------------------------------------");
-                // ## print
+                
                 while (true) {
                     System.out.print("Enter : ");
                     numSelect = in.nextInt();
@@ -193,8 +208,7 @@ public class Trainer {
                                 System.out.print("Enter :");
                                 numSelect = in.nextInt();
                                 if (numSelect == 1) {
-                                    System.out.println("Change Pokemon Not awailable Now!");
-                                    // #########################################################
+                                    changePokemon();
                                     break;
                                 } else if (numSelect == 2) {
                                     isTrainerEscape = true;
@@ -210,10 +224,8 @@ public class Trainer {
                         pokemonBag.get(pIndex).regenHealth(20);
                         break;
                     } else if (numSelect == 3) {
-                        // chage pokemon
-                        // ################################################################################################################
-                        // ################################################################################################################
-                        System.out.println("Change Pokemon Not awailable Now!");
+                        changePokemon();
+                        break;
                     } else if (numSelect == 4) {
                         catchPokemon();
                         break;
@@ -227,6 +239,36 @@ public class Trainer {
                 }
             }
         }
+    }
+
+    private void changePokemon() {
+        //########## choose pokemon
+        System.out.println("Choose Pokemon");
+        //list pokemon in pokemonBag
+        for(Pokemon p : pokemonBag) {
+            int i = 0;
+            System.out.println("[" + (i+1) + "]     " + p + "    Name : " + p.getName() + "    Type : " + p.getType() + "    Status : " + p.getLifeStatus());
+            i++;
+        }
+        //if (numOfPokemonInBag >= 2) { 
+            numSelect = 0;
+            while (true) {
+                System.out.print("Enter : ");
+                numSelect = in.nextInt(); 
+                if (numSelect >= 1 && numSelect <= numOfPokemonInBag) {
+                    pIndex = numSelect - 1;
+                    if (!pokemonBag.get(pIndex).isDie()) {
+                       break; 
+                    } else {
+                        System.out.println("You Select Died Pokemon, Select Again !!");
+                    }
+                } else {
+                    System.out.println("Invalid Input!, Try Again");
+                }
+            }
+        // } else {
+        //     System.out.println("You have only 1 pokemon in bag");
+        // }
     }
 
     private void catchPokemon() {
