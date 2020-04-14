@@ -6,7 +6,7 @@ public class Trainer {
     private String str;
     private Scanner in;
 
-    // private int money;
+    private int levelUpCount; 
     private String name;
     private ArrayList<Pokemon> pokemonBag;
     private ArrayList<Item> itemBag;
@@ -15,6 +15,7 @@ public class Trainer {
         pIndex = 0;
         str = "";
         in = new Scanner(System.in);
+        levelUpCount = 1;
         name = "";
         pokemonBag = new ArrayList<Pokemon>();
         itemBag = new ArrayList<Item>();
@@ -102,8 +103,8 @@ public class Trainer {
                      * System.out.println("Your pokemon has died , Go to pokemon Center first!!");
                      * break; }
                      */
-                    GameUtility.delay(1000);
                     goAdventure();
+                    GameUtility.pressEnterToContinue();
                     break;
                 } else if (numSelect == 2) {
                     pokemonBag.get(pIndex).eatBerry(20, 10); //##value
@@ -129,33 +130,38 @@ public class Trainer {
         }
     }
     private void goAdventure() {
-        int wildPokemonHP = GameUtility.randomInt(35, 60);                              //# change to random pokemon               ##initial wild pokemon
-        int wildPokemonMaxHP = wildPokemonHP;
-        int wildPokemonAP;
-        double wildPokemonExp = GameUtility.randomDouble(30, 50);
-
-
         boolean isTrainerEscape = false;
+        Pokemon wildPokemon;
+        if(levelUpCount < 3) {
+            wildPokemon = PokemonRandomizer.getOnePokemon(levelUpCount, 1);
+        } else {
+            wildPokemon = PokemonRandomizer.getOnePokemon(GameUtility.randomInt(levelUpCount - 1, levelUpCount + 1), 1);
+        }   
+       
+        GameUtility.delay(1000);
         System.out.println("Wild Pokemon in your area!!!");
+
         while (!isTrainerEscape) {
             GameUtility.delay(500);
-            wildPokemonAP = GameUtility.randomInt(20, 30);
-            if (wildPokemonHP <= 0 && isTrainerEscape == false) {
+
+            if (wildPokemon.isDie() && isTrainerEscape == false) {
                 GameUtility.delay(500);
                 System.out.println("Hurey!! You beat wild pokemon down!!");
                 GameUtility.delay(500);
-                System.out.println(pokemonBag.get(pIndex) + " earned " + String.format("%.2f", wildPokemonExp) + " Exp");
-                pokemonBag.get(pIndex).earnExp(wildPokemonExp);        
+                System.out.println(pokemonBag.get(pIndex) + " earned " + String.format("%.2f", wildPokemon.getExp()) + " Exp");
+                pokemonBag.get(pIndex).earnExp(wildPokemon.getExp());        
                 System.out.println("[ " + pokemonBag.get(pIndex).getHP() + "/" + pokemonBag.get(pIndex).getMaxHP() + " HP ]");
                 System.out.println("[ " + String.format("%.2f", pokemonBag.get(pIndex).getExp()) + "/"+ String.format("%.2f", pokemonBag.get(pIndex).getMaxExpPerLevel()) + " Exp ]");
                 // ################################################################################################################
                 // get item
                 break;  
+                
             } else if (isTrainerEscape == false) {
                 numSelect = 0;
                 // ## print
                 System.out.println("============================================================");
-                System.out.println("Wild Pokemon HP : " + wildPokemonHP + "/" + wildPokemonMaxHP);
+                System.out.println(wildPokemon + "      Name :  " + wildPokemon.getName() + "     type : " + wildPokemon.getType());
+                System.out.println("HP : " + wildPokemon.getHP() + "/" + wildPokemon.getMaxHP());
                 System.out.println(pokemonBag.get(pIndex) + " HP : " + pokemonBag.get(pIndex).getHP() + "/" + pokemonBag.get(pIndex).getMaxHP());
                 System.out.println("Action :: [1] Attack    [2] Regen HP    [3] Change Pokemon");
                 System.out.println("          [4] catch     [5] Escape");
@@ -165,12 +171,8 @@ public class Trainer {
                     System.out.print("Enter : ");
                     numSelect = in.nextInt();
                     if (numSelect == 1) {
-
-                        wildPokemonHP -= pokemonBag.get(pIndex).getAP();
-
-                        //pokemonBag.get(pIndex).getDamage(wildPokemonAP);
-                        // pokemonBag.get(pIndex).lossHugryPoint(5);   
-                        // pokemonBag.get(pIndex).lossSleepPoint(5);
+                        //attack
+                        wildPokemon = pokemonBag.get(pIndex).attack(wildPokemon);
 
                         if (pokemonBag.get(pIndex).isDie()) {
                             GameUtility.delay(400);
@@ -226,20 +228,6 @@ public class Trainer {
             }
         }
     }
-
-    // private void feedPokemon() {
-         
-    // }
-
-    // private void getPokemonToRest() {
-       
-    // }
-
-    // private void showPokemonStatusInterface() {
-       
-    // }
-
-    
 
     private void catchPokemon() {
         //check before catch pokemon

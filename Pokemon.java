@@ -18,20 +18,30 @@ public abstract class Pokemon {
     private double tmpMaxExp;
     private int tmpAP;
 
-    public Pokemon(String name, String nickName) {
+    public Pokemon(String name, String nickName, String type, int level, int typeCreature) {
         //setType(type);
         //type = "";
         this.name = name;
         this.nickName = nickName;
-        healthPoint = GameUtility.randomInt(50, 70);
+        this.type = type;
+        this.level = level;
+
+        healthPoint = GameUtility.randomInt(50*level/2, 70*level/2);   //***************************** */
         maxHealthPoint = healthPoint;
-        attackPoint = GameUtility.randomInt(20, 40);
+        attackPoint = GameUtility.randomInt(30*level/3, 50*level/3);   //***************************** */
         sleepPoint = 100; // %
         maxSleepPoint = sleepPoint;
         hungryPoint = 100; // %
         maxHungryPoint = hungryPoint;
-        exp = 0.0;
-        maxExpPerLevel = 50.0;
+        if (typeCreature == 0) {            //trainer's pokemon
+            exp = 0.0;
+            maxExpPerLevel = GameUtility.randomDouble(70*level/3, 160*level/3);
+        } else if (typeCreature == 1) {     //wild pokemon 
+            exp = GameUtility.randomDouble(50*level/3, 70*level/3);
+        }
+
+      
+
         level = 1;
         deathCount = 0;
         tmpHP = healthPoint;
@@ -40,31 +50,22 @@ public abstract class Pokemon {
     }
     
    // # -------------user initial-------------------
+
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
 
-    public void setType(int numType) {          //will receive type from constructor
-        if (numType == 1) {
-            type = "Normal";
-        } else if (numType == 2) {
-            type = "Fire";
-        } else if (numType == 3) {
-            type = "Water";
-        } else if (numType == 4) {
-            type = "Grass";
-        } else if (numType == 5) {
-            type = "Electric";
-        } else if (numType == 6) {
-            type = "Poison";
-        }
-    }
     //#---------------act---------------
-    public void actack() {
+
+    public Pokemon attack(Pokemon wildPokemon) {
         //damage wild pokemon
-        //getDamage(*******);
+        wildPokemon.getDamage(attackPoint);
+        //get damage from wild pokemon 
+        getDamage(wildPokemon.getAP());
+
         lossHugryPoint(5);   
         lossSleepPoint(5);
+        return wildPokemon;
     }
 
     //#---------------status------------
@@ -80,6 +81,7 @@ public abstract class Pokemon {
     }
 
     //# --------------Exp and Level------------------
+
     public void earnExp(double monsterExp) {
         if ((exp + monsterExp) >= maxExpPerLevel) {
             exp = (exp + monsterExp) - maxExpPerLevel;
@@ -105,6 +107,7 @@ public abstract class Pokemon {
         }
     }
     //# --------------Get Damage------------------
+
     public void getDamage(int monsterAP) {
         if ((healthPoint - monsterAP) > 0) {
             healthPoint -= monsterAP;
@@ -121,6 +124,7 @@ public abstract class Pokemon {
             return false;
     }
     //# --------------Healing------------------
+
     public void getCured() {
         healthPoint = maxHealthPoint;
     }
@@ -136,6 +140,7 @@ public abstract class Pokemon {
         }
     }
     // #------------------decrese------------------
+
     public void lossSleepPoint(int value) {
         if ((sleepPoint - value) <= 0) {
             sleepPoint = 0;
@@ -154,6 +159,7 @@ public abstract class Pokemon {
         }
     }
     //# ----------------increase------------------
+
     public void eatBerry(int valueHp , int valueHgP) {
         if ((healthPoint + valueHp) >= maxHealthPoint) {
             healthPoint = maxHealthPoint;
@@ -179,6 +185,7 @@ public abstract class Pokemon {
     }
 
     // #-------------get method----------------
+
     public String toString() {
         return nickName;
     }

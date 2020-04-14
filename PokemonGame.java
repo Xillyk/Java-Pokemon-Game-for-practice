@@ -111,10 +111,7 @@ public class PokemonGame {
             System.out.println("Invalid name!, Try Again");
         }
     }
-
-    // #-----------------------
-
-
+    
     private void stopRunning() {
         running = false;
     }
