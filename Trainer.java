@@ -253,6 +253,7 @@ public class Trainer {
         for(Pokemon p : pokemonBag) {
             System.out.println("[" + (index++) + "]     " + p + "    Name : " + p.getName() + "    Type : " + p.getType() + "    Status : " + p.getLifeStatus());
         }
+        System.out.println("[0] Back");
         //if (numOfPokemonInBag >= 2) { 
             numSelect = 0;
             while (true) {
@@ -265,6 +266,9 @@ public class Trainer {
                     } else {
                         System.out.println("You Select Died Pokemon, Select Again !!");
                     }
+                } else if(numSelect == 0) {
+                    System.out.println("back to action");
+                    break;
                 } else {
                     System.out.println("Invalid Input!, Try Again");
                 }
