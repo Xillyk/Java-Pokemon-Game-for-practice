@@ -17,6 +17,7 @@ public abstract class Pokemon {
     private int tmpHP;
     private double tmpMaxExp;
     private int tmpAP;
+    private boolean getCaught;
 
     public Pokemon(String name, String nickName, String type, int level, int typeCreature) {
         //setType(type);
@@ -39,23 +40,42 @@ public abstract class Pokemon {
         } else if (typeCreature == 1) {     //wild pokemon 
             exp = GameUtility.randomDouble(50*level/3, 70*level/3);
         }
-
-      
-
         level = 1;
         deathCount = 0;
         tmpHP = healthPoint;
         tmpMaxExp = maxExpPerLevel;
         tmpAP = attackPoint;
+        getCaught = false;
     }
+
+    //#--------------get caught-----------------  
+    // set creature type from wild pokemon to trainer's pokemon (using in chatch pokemon method) + also set new nickname
     
-   // # -------------user initial-------------------
+    public void getCaught (String nickName) {
+        changeDetail();
+        setNickName(nickName);
+        getCaught = true;
+    }
+
+    public void changeDetail() {
+        healthPoint = maxHealthPoint;   //reset hp to be max
+        exp = 0.0;                      //reset exp to be 0.0
+        maxExpPerLevel = GameUtility.randomDouble(70*level/3, 160*level/3);     //set new maxExp 
+    }
+
+    public boolean isGetCaught() {
+        if(getCaught == true)
+            return true;
+        else
+            return false;
+    }
+    //#---------------setting----------------
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
 
-    //#---------------act---------------
+    //#---------------action-----------------
 
     public Pokemon attack(Pokemon wildPokemon) {
         //damage wild pokemon

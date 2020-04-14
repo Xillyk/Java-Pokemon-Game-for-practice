@@ -138,6 +138,7 @@ public class Trainer {
         boolean isTrainerEscape = false;
         boolean firstRoundAttack = true;
         Pokemon wildPokemon;
+
         if(levelUpCount < 3) {
             wildPokemon = PokemonRandomizer.getOnePokemon(levelUpCount, 1);
         } else {
@@ -149,8 +150,8 @@ public class Trainer {
 
         while (!isTrainerEscape) {
             GameUtility.delay(500);
-
-            if (wildPokemon.isDie() && isTrainerEscape == false) {
+            //check if wild pokemon died and not get cauth before ending of fighting
+            if (wildPokemon.isDie() && isTrainerEscape == false && !wildPokemon.isGetCaught()) {
                 GameUtility.delay(500);
                 System.out.println("Hurey!! You beat wild pokemon down!!");
                 GameUtility.delay(500);
@@ -161,8 +162,11 @@ public class Trainer {
                 // ################################################################################################################
                 // get item
                 break;  
-                
-            } else if (isTrainerEscape == false) {
+            } else if (isTrainerEscape == false && wildPokemon.isGetCaught()) {
+                System.out.println("Finish xx ");
+                // ################################################################################################################
+                break;  
+            } else if (isTrainerEscape == false && !wildPokemon.isGetCaught()) {        //check if it still in fighting and wild pokemon is not get caught
                 numSelect = 0;
                 // ## print
                 System.out.println("============================================================");
@@ -227,7 +231,7 @@ public class Trainer {
                         changePokemon();
                         break;
                     } else if (numSelect == 4) {
-                        catchPokemon();
+                        catchPokemon(wildPokemon);
                         break;
                     } else if (numSelect == 5) {
                         isTrainerEscape = true;
@@ -245,10 +249,9 @@ public class Trainer {
         //########## choose pokemon
         System.out.println("Choose Pokemon");
         //list pokemon in pokemonBag
+        int index = 1;
         for(Pokemon p : pokemonBag) {
-            int i = 0;
-            System.out.println("[" + (i+1) + "]     " + p + "    Name : " + p.getName() + "    Type : " + p.getType() + "    Status : " + p.getLifeStatus());
-            i++;
+            System.out.println("[" + (index++) + "]     " + p + "    Name : " + p.getName() + "    Type : " + p.getType() + "    Status : " + p.getLifeStatus());
         }
         //if (numOfPokemonInBag >= 2) { 
             numSelect = 0;
@@ -271,10 +274,26 @@ public class Trainer {
         // }
     }
 
-    private void catchPokemon() {
-        //check before catch pokemon
+    private void catchPokemon(Pokemon wildPokemon) {
+        str = "";
+        //check wild pokemon hp 
+
+
         //if ()
 
+        //set wild pokemon to be trainer's pokemon before adding into bag
+        System.out.print("Give it a name : ");
+        while (true) {
+            in.nextLine();      //clear enter buffer
+            str = in.nextLine();
+            if(!str.equals("")) {
+                wildPokemon.getCaught(str);
+                pokemonBag.add(wildPokemon);
+                numOfPokemonInBag++;
+                break;                
+            }
+            System.out.println("Invalid Input!, Try Again");        
+        }
     }
 
     // private void listPokemon() {
