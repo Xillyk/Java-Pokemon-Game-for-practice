@@ -47,10 +47,36 @@ public abstract class Pokemon {
         tmpAP = attackPoint;
         getCaught = false;
     }
+    //#---------------status------------
+
+    public boolean isWeak() {
+        if(healthPoint < (maxHealthPoint * 40 / 100)) {
+            return true;
+        } else if ((healthPoint >= maxHealthPoint * 40 /100) && (healthPoint <= maxHealthPoint * 60 /100)) {
+            int rand = (int) (Math.random() * 2);
+            if(rand == 0) 
+                return true;
+            else if (rand == 1)
+                return false;
+            else 
+                return false;
+        } else 
+            return false;
+    }
+
+    public void getStatus() { 
+        System.out.println("| Nickname     : " + nickName + "      Name : " + name);
+        System.out.println("| Type         : " + getType() + "    Level : " + getLevel() + "    Death : " + getDeathCount() + " time");
+        System.out.println("| HP           : " + getHP() + "/" + getMaxHP());
+        System.out.println("| Exp          : " + String.format("%.2f", getExp()) + "/"+ String.format("%.2f", getMaxExpPerLevel()));
+        System.out.println("| AP           : " + getAP());
+        System.out.println("| Hungry Point : " + getHungryPoint() + "/" + getMaxHungryPoint());
+        System.out.println("| Sleep Point  : " + getSleepPoint() + "/" + getMaxSleepingPoint());
+    }
 
     //#--------------get caught-----------------  
     // set creature type from wild pokemon to trainer's pokemon (using in chatch pokemon method) + also set new nickname
-    
+
     public void getCaught (String nickName) {
         changeDetail();
         setNickName(nickName);
@@ -86,18 +112,6 @@ public abstract class Pokemon {
         lossHugryPoint(5);   
         lossSleepPoint(5);
         return wildPokemon;
-    }
-
-    //#---------------status------------
-
-    public void getStatus() { 
-        System.out.println("| Nickname     : " + nickName + "      Name : " + name);
-        System.out.println("| Type         : " + getType() + "    Level : " + getLevel() + "    Death : " + getDeathCount() + " time");
-        System.out.println("| HP           : " + getHP() + "/" + getMaxHP());
-        System.out.println("| Exp          : " + String.format("%.2f", getExp()) + "/"+ String.format("%.2f", getMaxExpPerLevel()));
-        System.out.println("| AP           : " + getAP());
-        System.out.println("| Hungry Point : " + getHungryPoint() + "/" + getMaxHungryPoint());
-        System.out.println("| Sleep Point  : " + getSleepPoint() + "/" + getMaxSleepingPoint());
     }
 
     //# --------------Exp and Level------------------

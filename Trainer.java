@@ -153,7 +153,7 @@ public class Trainer {
             //check if wild pokemon died and not get cauth before ending of fighting
             if (wildPokemon.isDie() && isTrainerEscape == false && !wildPokemon.isGetCaught()) {
                 GameUtility.delay(500);
-                System.out.println("Hurey!! You beat wild pokemon down!!");
+                System.out.println("Hurey!! You beat " + wildPokemon + " down!!");
                 GameUtility.delay(500);
                 System.out.println(pokemonBag.get(pIndex) + " earned " + String.format("%.2f", wildPokemon.getExp()) + " Exp");
                 pokemonBag.get(pIndex).earnExp(wildPokemon.getExp());        
@@ -163,8 +163,6 @@ public class Trainer {
                 // get item
                 break;  
             } else if (isTrainerEscape == false && wildPokemon.isGetCaught()) {
-                System.out.println("Finish xx ");
-                // ################################################################################################################
                 break;  
             } else if (isTrainerEscape == false && !wildPokemon.isGetCaught()) {        //check if it still in fighting and wild pokemon is not get caught
                 numSelect = 0;
@@ -280,24 +278,26 @@ public class Trainer {
 
     private void catchPokemon(Pokemon wildPokemon) {
         str = "";
-        //check wild pokemon hp 
-
-
-        //if ()
-
-        //set wild pokemon to be trainer's pokemon before adding into bag
-        System.out.print("Give it a name : ");
-        while (true) {
-            in.nextLine();      //clear enter buffer
-            str = in.nextLine();
-            if(!str.equals("")) {
-                wildPokemon.getCaught(str);
-                pokemonBag.add(wildPokemon);
-                numOfPokemonInBag++;
-                break;                
-            }
-            System.out.println("Invalid Input!, Try Again");        
+        //check wild pokemon status 
+        if(wildPokemon.isWeak()){
+            //set wild pokemon to be trainer's pokemon before adding into bag
+            System.out.print("Give it a name : ");
+            while (true) {
+                in.nextLine();      //clear enter buffer
+                str = in.nextLine();
+                if(!str.equals("")) {
+                    wildPokemon.getCaught(str);
+                    pokemonBag.add(wildPokemon);
+                    System.out.println(str + " has been added into your pokemon bag");
+                    numOfPokemonInBag++;
+                    break;                
+                }
+                System.out.println("Invalid Input!, Try Again");        
+            }    
+        } else {
+            System.out.println(wildPokemon + " is too strong!, Attack it more.");
         }
+        
     }
 
     // private void listPokemon() {
