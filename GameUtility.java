@@ -19,15 +19,4 @@ public class GameUtility {
         randNum = (double) Math.random() * ((max - min) + 1) + min;
         return randNum;
     }
-
-    public static void pressEnterToContinue() { 
-        System.out.println(" --------------------------");
-        System.out.println("|Press Enter to continue...|");
-        System.out.println(" --------------------------");
-        try {
-            System.in.read();
-        }  
-        catch(Exception e)
-        {}  
-    }
 }

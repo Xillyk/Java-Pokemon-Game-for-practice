@@ -1,11 +1,11 @@
 
-public class Squirtle extends Pokemon {
-    public Squirtle(String nickName, int level, int typeCreature) {
-        super("Squirtle", nickName, "Water", level, typeCreature);
+public class Vulpix extends Pokemon {
+    public Vulpix(String nickName, int level, int typeCreature) {
+        super("Vulpix", nickName, "Fire", level, typeCreature);
     }
     public void attack(Pokemon p) {
         int ap = getAP();
-        int cri = 4;  // 100 / cri
+        int cri = 6;            // 100 / cri
         int rand = (int) (Math.random() * cri);
         if (rand == 0) {
             // get critical X 2
@@ -13,9 +13,10 @@ public class Squirtle extends Pokemon {
         }
         p.getDamage(ap);
 
-        rand = (int) (Math.random() * 2);
+        int hgBuff = 3;         // 100 / hgBuff 
+        rand = (int) (Math.random() * hgBuff);
         if (rand == 0) 
-            p.lossHugryPoint(20);
+            p.lossHugryPoint(30);
     
         lossHugryPoint(10);   
         lossSleepPoint(5);

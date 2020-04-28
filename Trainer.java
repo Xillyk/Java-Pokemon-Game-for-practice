@@ -1,317 +1,118 @@
 import java.util.*;
 
 public class Trainer {
-    private int numSelect;
     private int pIndex; // pokemonIndex
-    private String str;
-    private Scanner in;
-
     private int levelUpCount; 
+    private String gender;
     private String name;
+    private int money;
+    private int killStat;
+    private int donateStat;
     private ArrayList<Pokemon> pokemonBag;
-    private ArrayList<Item> itemBag;
-    private int numOfPokemonInBag;
+    private Bag itemBag;
 
     public Trainer() {
         pIndex = 0;
-        str = "";
-        in = new Scanner(System.in);
         levelUpCount = 1;
         name = "";
+        money = 0;
+        killStat = 0;
+        donateStat = 0;
         pokemonBag = new ArrayList<Pokemon>();
-        itemBag = new ArrayList<Item>();
-        numOfPokemonInBag = 0;
+        itemBag = new Bag();
     }
+
+    // TRAINER PROFILE ---------------------------------------
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public String toString() {
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public void receiveFirstPokemon() {
-        ArrayList<Pokemon> randPokemons = PokemonRandomizer.getPokemons(3);
-        System.out.println("Select your first pokemon");
-        System.out.println("    [1] " + randPokemons.get(0).getName());
-        System.out.println("    [2] " + randPokemons.get(1).getName());
-        System.out.println("    [3] " + randPokemons.get(2).getName());
-        numSelect = 0;
-        str = "";
-        while (true) {
-            System.out.print("Enter : ");
-            numSelect = in.nextInt();
-            in.nextLine();
-            if (numSelect >= 1 && numSelect <= 3) {
-                while (true) {
-                    System.out.print("Enter Pokemon's name : ");
-                    str = in.nextLine();
-                    if (str != null && !str.equals("")) {
-                        if (numSelect == 1) {
-                            randPokemons.get(0).setNickName(str);
-                            pokemonBag.add(randPokemons.get(0));
-                            numOfPokemonInBag++;
-                        }
-                        else if (numSelect == 2) {
-                            randPokemons.get(1).setNickName(str);
-                            pokemonBag.add(randPokemons.get(1));
-                            numOfPokemonInBag++;
-                        }   
-                        else if (numSelect == 3) {
-                            randPokemons.get(2).setNickName(str);
-                            pokemonBag.add(randPokemons.get(2));
-                            numOfPokemonInBag++;
-                        }
-                        break;  //break if str is valid                                          
-                    }
-                    System.out.println("Invalid Input!, Try Again");
-                }
-                break;  //break if numSelect is valid 
-            }
-            System.out.println("Invalid Input!, Try Again");
-        }
-
-        GameUtility.delay(500);
-        System.out.println("So, " + pokemonBag.get(0) + " is your first pokemon.");
-        GameUtility.delay(500);
-        System.out.println("Let's Adventure !!");
-        GameUtility.delay(500);
+    public String getGender() {
+        return gender;
     }
 
-    private void showActInterface() {
-        System.out.println("============================================================");
-        System.out.println("Choose Action       :: [1] Go Adventure");
-        System.out.println("                    :: [2] Feed pokemon");
-        System.out.println("                    :: [3] get your pokemon rest");
-        System.out.println("                    :: [4] Cure pokemons at pokemon center");
-        System.out.println("                    :: [5] See Status");
-        System.out.println("                    :: [0] Back to Main Menu");
-        System.out.println("------------------------------------------------------------");
+    public void successKill() {
+        killStat++;
     }
 
-    public void act() {
-        // #Later with array
-        // System.out.println("Choose Your Pokemon");
-        boolean outToMain = false;
-        while (!outToMain) {
-            GameUtility.delay(500);
-            showActInterface();
-            while (true) {
-                System.out.print("Enter : ");
-                numSelect = -1;
-                numSelect = in.nextInt();
-                // roam , attack (or leave) // eat // sleep
-                if (numSelect == 1) {
-                    /*
-                     * if(myPokemon.getHP() <= 0 ) {
-                     * System.out.println("Your pokemon has died , Go to pokemon Center first!!");
-                     * break; }
-                     */
-                    goAdventure();
-                    GameUtility.pressEnterToContinue();
-                    break;
-                } else if (numSelect == 2) {
-                    pokemonBag.get(pIndex).eatBerry(20, 10); //##value
-                    break;
-                } else if (numSelect == 3) {
-                    pokemonBag.get(pIndex).sleep();
-                    GameUtility.pressEnterToContinue();
-                    break;
-                } else if (numSelect == 4) {
-                    // pokemonCenter();
-                    break;
-                } else if (numSelect == 5) {
-                    pokemonBag.get(pIndex).getStatus();
-                    GameUtility.pressEnterToContinue();
-                    break;
-                } else if (numSelect == 0) {
-                    outToMain = true;
-                    break;
-                } else {
-                    System.out.println("Invalid Input!, Try Again");
-                }
-            }
-        }
+    public int getKillStat() {
+        return killStat;
     }
-    private void goAdventure() {
-        boolean isTrainerEscape = false;
-        boolean firstRoundAttack = true;
-        Pokemon wildPokemon;
 
-        if(levelUpCount < 3) {
-            wildPokemon = PokemonRandomizer.getOnePokemon(levelUpCount, 1);
-        } else {
-            wildPokemon = PokemonRandomizer.getOnePokemon(GameUtility.randomInt(levelUpCount - 1, levelUpCount + 1), 1);
-        }   
-       
-        GameUtility.delay(1000);
-        System.out.println("Wild Pokemon in your area!!!");
+    public void donatePokemon() {
+        donateStat++;
+    }
 
-        while (!isTrainerEscape) {
-            GameUtility.delay(500);
-            //check if wild pokemon died and not get cauth before ending of fighting
-            if (wildPokemon.isDie() && isTrainerEscape == false && !wildPokemon.isGetCaught()) {
-                GameUtility.delay(500);
-                System.out.println("Hurey!! You beat " + wildPokemon + " down!!");
-                GameUtility.delay(500);
-                System.out.println(pokemonBag.get(pIndex) + " earned " + String.format("%.2f", wildPokemon.getExp()) + " Exp");
-                pokemonBag.get(pIndex).earnExp(wildPokemon.getExp());        
-                System.out.println("[ " + pokemonBag.get(pIndex).getHP() + "/" + pokemonBag.get(pIndex).getMaxHP() + " HP ]");
-                System.out.println("[ " + String.format("%.2f", pokemonBag.get(pIndex).getExp()) + "/"+ String.format("%.2f", pokemonBag.get(pIndex).getMaxExpPerLevel()) + " Exp ]");
-                // ################################################################################################################
-                // get item
-                break;  
-            } else if (isTrainerEscape == false && wildPokemon.isGetCaught()) {
-                break;  
-            } else if (isTrainerEscape == false && !wildPokemon.isGetCaught()) {        //check if it still in fighting and wild pokemon is not get caught
-                numSelect = 0;
-                // ## print
-                System.out.println("============================================================");
-                System.out.println(wildPokemon + "      Name :  " + wildPokemon.getName() + "     type : " + wildPokemon.getType());
-                System.out.println("HP : " + wildPokemon.getHP() + "/" + wildPokemon.getMaxHP());
-                System.out.println(pokemonBag.get(pIndex) + " HP : " + pokemonBag.get(pIndex).getHP() + "/" + pokemonBag.get(pIndex).getMaxHP());
-                System.out.println("============================================================");
-                // ## print
-                //chang pokemon in first round
-                if (firstRoundAttack == true) {
-                    changePokemon();
-                    firstRoundAttack = false;
-                }
+    public int getDonateStat() { 
+        return donateStat;
+    }
 
-                //print action
-                System.out.println("Action :: [1] Attack    [2] Regen HP    [3] Change Pokemon");
-                System.out.println("          [4] catch     [5] Escape");
-                System.out.println("------------------------------------------------------------");
-                
-                while (true) {
-                    System.out.print("Enter : ");
-                    numSelect = in.nextInt();
-                    if (numSelect == 1) {
-                        //attack
-                        wildPokemon = pokemonBag.get(pIndex).attack(wildPokemon);
+    // MONEY -------------------------------------------------
+    public int getAmountMoney() {
+        return money;
+    }
 
-                        if (pokemonBag.get(pIndex).isDie()) {
-                            GameUtility.delay(400);
-                            double tmpLossExp = 0.0;
-                            tmpLossExp = GameUtility.randomDouble(5, 15);
-                            pokemonBag.get(pIndex).lossExp(tmpLossExp);
-                            // ## print
-                            System.out.println("------------------------------------------------------------");
-                            System.out.println(pokemonBag.get(pIndex) + " is dead!   Death : " + pokemonBag.get(pIndex).getDeathCount() + " times");
-                            System.out.println(pokemonBag.get(pIndex) + " loss " + String.format("%.2f", tmpLossExp) + " Exp.");
-                            GameUtility.delay(400);
-                            System.out.println("You have to 'Change pokemon' or 'Escape' !!");
-                            System.out.println("Select ::   [1] Change Pokemon ");
-                            System.out.println("       ::   [2] Escape");
-                            // ## print
-                            while (true) {
-                                numSelect = 0;
-                                System.out.print("Enter :");
-                                numSelect = in.nextInt();
-                                if (numSelect == 1) {
-                                    changePokemon();
-                                    break;
-                                } else if (numSelect == 2) {
-                                    isTrainerEscape = true;
-                                    System.out.println("Runnnnn!!!!!");
-                                    break;
-                                } else {
-                                    System.out.println("Invalid Input!, Try Again");
-                                }
-                            }
-                        }
-                        break;
-                    } else if (numSelect == 2) {
-                        pokemonBag.get(pIndex).regenHealth(20);
-                        break;
-                    } else if (numSelect == 3) {
-                        changePokemon();
-                        break;
-                    } else if (numSelect == 4) {
-                        catchPokemon(wildPokemon);
-                        break;
-                    } else if (numSelect == 5) {
-                        isTrainerEscape = true;
-                        System.out.println("Runnnnn!!!!!");
-                        break;
-                    } else {
-                        System.out.println("Invalid Input!, Try Again");
-                    }
-                }
-            }
+    public void receiveMoney(int money) {
+        this.money += money;
+    }
+
+    public void pay(int fee) {
+        if (money - fee >= 0) {
+            money -= fee;
         }
     }
 
-    private void changePokemon() {
-        //########## choose pokemon
-        System.out.println("Choose Pokemon");
-        //list pokemon in pokemonBag
-        int index = 1;
-        for(Pokemon p : pokemonBag) {
-            System.out.println("[" + (index++) + "]     " + p + "    Name : " + p.getName() + "    Type : " + p.getType() + "    Status : " + p.getLifeStatus());
-        }
-        System.out.println("[0] Back");
-        //if (numOfPokemonInBag >= 2) { 
-            numSelect = 0;
-            while (true) {
-                System.out.print("Enter : ");
-                numSelect = in.nextInt(); 
-                if (numSelect >= 1 && numSelect <= numOfPokemonInBag) {
-                    pIndex = numSelect - 1;
-                    if (!pokemonBag.get(pIndex).isDie()) {
-                       break; 
-                    } else {
-                        System.out.println("You Select Died Pokemon, Select Again !!");
-                    }
-                } else if(numSelect == 0) {
-                    System.out.println("back to action");
-                    break;
-                } else {
-                    System.out.println("Invalid Input!, Try Again");
-                }
-            }
-        // } else {
-        //     System.out.println("You have only 1 pokemon in bag");
-        // }
+    public Boolean hasEnoughMoney(int fee) {
+        if (money - fee < 0) {
+            return false; 
+        } else 
+            return true;
     }
 
-    private void catchPokemon(Pokemon wildPokemon) {
-        str = "";
-        //check wild pokemon status 
-        if(wildPokemon.isWeak()){
-            //set wild pokemon to be trainer's pokemon before adding into bag
-            System.out.print("Give it a name : ");
-            while (true) {
-                in.nextLine();      //clear enter buffer
-                str = in.nextLine();
-                if(!str.equals("")) {
-                    wildPokemon.getCaught(str);
-                    pokemonBag.add(wildPokemon);
-                    System.out.println(str + " has been added into your pokemon bag");
-                    numOfPokemonInBag++;
-                    break;                
-                }
-                System.out.println("Invalid Input!, Try Again");        
-            }    
-        } else {
-            System.out.println(wildPokemon + " is too strong!, Attack it more.");
-        }
-        
+    // ITEM BAG -------------------------------------------------
+
+    public Bag getBag() {
+        return itemBag;
     }
 
-    // private void listPokemon() {
-    // int index = 1;
-    // System.out.println("Your Pokemon : ");
-    // for (Pokemon p : pokemonBag) {
-    // System.out.println(" [" + index + "] " + p);
-    // }
-    // }
+    // POKEMON BAG -------------------------------------------------
 
-    // private int findPokemonIndex() {
-    // int index = 0;
-    // for (Pokemon p :pokemonBag) {
-    // if()
-    // }
-    // }
+    public ArrayList<Pokemon> getPokemonBag() {
+        return pokemonBag;
+    }
+
+    public int getPokemonIndex() {
+        return pIndex;
+    }
+
+    public void setPokemonIndex(int pIndex) {
+        this.pIndex = pIndex;
+    }
+
+    public void receivePokemonInFirstTime(Pokemon p) {
+        pokemonBag.add(p);
+    }
+
+    public void increaseLevelUpCount() {
+        levelUpCount++;
+    }
+
+    public int getLevelUpCount() {
+        return levelUpCount;
+    }
+
+    public void donatePokemon(int index) {
+        pokemonBag.remove(index);
+        pIndex = 0;
+        donateStat++;
+    }
 }
